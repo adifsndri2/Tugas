@@ -1,0 +1,41 @@
+---
+import Icon from '../components/icon.astro';
+import type { Catalog } from '../lib/catalog.ts';
+
+const { item, preview = false, accent = 'blue' } = Astro.props;
+const Tag = preview ? 'div' : 'a';
+const linkProps = preview ? {} : { href: item.link, target: '_blank', rel: 'noopener noreferrer' };
+const accentClasses: Record<string, string> = {
+    blue: 'border-t-[#4267D5] bg-[#E8EEFF] text-[#4267D5]',
+    teal: 'border-t-[#15B7B0] bg-[#E0F7F5] text-[#159B98]',
+    amber: 'border-t-[#F0A522] bg-[#FFF1D8] text-[#D17C00]',
+    green: 'border-t-[#22A863] bg-[#E1F7E9] text-[#16884E]',
+    red: 'border-t-[#F14B52] bg-[#FFE4E5] text-[#DD3D45]',
+    violet: 'border-t-[#6B57E8] bg-[#ECE8FF] text-[#5A45D1]',
+};
+const domain = item.link?.replace(/^https?:\/\//, '').replace(/\/$/, '');
+---
+
+<Tag
+    {...linkProps}
+    class:list={[
+        'group relative flex min-h-[168px] h-full flex-col items-start rounded-2xl border border-[#E6EBF3] border-t-[3px] bg-white p-4 text-left text-ink no-underline shadow-[0_5px_16px_rgba(24,58,120,0.08)] transition hover:-translate-y-1 hover:shadow-[0_12px_26px_rgba(24,58,120,0.14)] focus-visible:ring-4 focus-visible:ring-brand/30',
+        accentClasses[accent]?.split(' ')[0],
+    ]}
+>
+    <div class:list={['grid h-10 w-10 place-items-center overflow-hidden rounded-xl', accentClasses[accent]?.split(' ').slice(1)]}>
+        <img data-img src={item.image_path ?? undefined} alt="" class:list={['h-full w-full object-contain', !item.image_path && 'hidden']} />
+        {!item.image_path && <Icon name="grid" class="size-5" />}
+    </div>
+
+    <h2 data-name class="mt-3 text-sm font-bold">{item.name || 'Nama katalog'}</h2>
+    <p data-desc class="mt-2 line-clamp-2 text-[11px] leading-relaxed text-muted">{item.description}</p>
+
+    <div class="mt-auto flex w-full items-center gap-2 border-t border-[#EEF1F5] pt-3 text-[10px] text-muted">
+        <span class:list={['size-1.5 rounded-full', accentClasses[accent]?.split(' ')[0].replace('border-t-', 'bg-')]}></span>
+        <span class="truncate">{domain}</span>
+    </div>
+    <span class="absolute right-4 top-4 grid size-6 place-items-center rounded-full border border-line text-brand" aria-hidden="true">
+        <Icon name="arrow" class="size-3.5" />
+    </span>
+</Tag>

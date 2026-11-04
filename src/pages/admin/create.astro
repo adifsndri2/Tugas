@@ -1,0 +1,31 @@
+---
+import AdminLayout from '../../layout/adminLayout.astro';
+import CatalogForm from '../../components/CatalogForm.astro';
+import { insertCatalog, readForm, validate, type Errors } from '../../lib/catalog';
+import { checkImage, saveImage } from '../../lib/upload';
+
+let errors: Errors = {};
+let values = { name: '', description: '', link: '', image_path: null as string | null };
+
+if (Astro.request.method === 'POST') {
+  const v = readForm(await Astro.request.formData());
+  values = { ...values, name: v.name, description: v.description, link: v.link };
+
+  errors = validate(v);
+  if (v.image) {
+    const msg = checkImage(v.image);
+    if (msg) errors.image = msg;
+  }
+
+  if (Object.keys(errors).length === 0) {
+    const image_path = v.image ? await saveImage(v.image) : null;
+    insertCatalog({ name: v.name, description: v.description, link: v.link, image_path });
+    return Astro.redirect('/admin');
+  }
+}
+---
+<AdminLayout title="Tambah Katalog">
+  <p class="mb-2 text-sm text-muted"><a href="/admin" class="text-brand">Katalog</a> / Tambah Katalog</p>
+  <h1 class="mb-6 text-[28px] font-bold">Tambah Katalog</h1>
+  <CatalogForm values={values} errors={errors} />
+</AdminLayout>

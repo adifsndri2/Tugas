@@ -1,0 +1,95 @@
+---
+import CatalogCard from './CatalogCard.astro';
+import Icon from './icon.astro';
+import type { Errors } from '../lib/catalog';
+
+interface Props {
+  values: { name: string; description: string; link: string; image_path: string | null };
+  errors?: Errors;
+  isEdit?: boolean;
+}
+const { values, errors = {}, isEdit = false } = Astro.props;
+const err = (k: keyof Errors) => (errors[k] ? 'true' : undefined);
+---
+<div class="grid grid-cols-[repeat(auto-fit,minmax(340px,1fr))] items-start gap-6">
+
+  <form method="POST" enctype="multipart/form-data" novalidate
+        class="flex flex-col gap-[22px] rounded-2xl border border-line bg-white p-7">
+
+    <div>
+      <label for="image" class="label">Gambar</label>
+      <div class="relative rounded-[14px] border-2 border-dashed border-[#aebbd0] bg-[#f8fafd] px-4 py-7 text-center text-muted focus-within:ring-4 focus-within:ring-brand/30">
+        <Icon name="upload" class="mx-auto size-7 text-brand" />
+        <p id="file-hint" class="mt-2 mb-0.5 text-[15px] font-semibold text-ink">Pilih gambar atau seret ke sini</p>
+        <p class="text-[13px]">JPG, PNG, atau WebP · maksimal 2 MB</p>
+        <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp"
+               aria-invalid={err('image')} aria-describedby="image-error"
+               class="absolute inset-0 size-full cursor-pointer opacity-0" />
+      </div>
+      {isEdit && <p class="mt-1.5 text-[13px] text-muted">Kosongkan jika tidak ingin mengganti gambar.</p>}
+      {errors.image && <p id="image-error" class="mt-1.5 text-[13px] text-danger">{errors.image}</p>}
+    </div>
+
+    <div>
+      <label for="name" class="label">Nama Katalog</label>
+      <input id="name" name="name" class="field" value={values.name}
+             aria-invalid={err('name')} aria-describedby="name-error" />
+      {errors.name && <p id="name-error" class="mt-1.5 text-[13px] text-danger">{errors.name}</p>}
+    </div>
+
+    <div>
+      <label for="description" class="label">Deskripsi</label>
+      <textarea id="description" name="description" rows="4" maxlength="500"
+                class="field h-[108px] resize-y py-3"
+                aria-invalid={err('description')} aria-describedby="description-error">{values.description}</textarea>
+      <p id="desc-count" class="mt-1.5 text-right text-[13px] text-muted">{values.description.length} / 500</p>
+      {errors.description && <p id="description-error" class="text-[13px] text-danger">{errors.description}</p>}
+    </div>
+
+    <div>
+      <label for="link" class="label">Link Katalog</label>
+      <input id="link" name="link" type="url" class="field" value={values.link}
+             placeholder="https://..." aria-invalid={err('link')} aria-describedby="link-error" />
+      {errors.link && <p id="link-error" class="mt-1.5 text-[13px] text-danger">{errors.link}</p>}
+    </div>
+
+    <div class="flex justify-end gap-3 border-t border-line pt-5">
+      <a href="/admin" class="btn">Batal</a>
+      <button class="btn btn-primary">{isEdit ? 'Simpan Perubahan' : 'Simpan Katalog'}</button>
+    </div>
+  </form>
+
+  <aside class="rounded-2xl border border-line bg-white p-7">
+    <p class="mb-4 text-[13px] font-bold tracking-wide text-muted">PRATINJAU DI PORTAL</p>
+    <div data-preview class="rounded-[20px] bg-surface">
+      <CatalogCard item={values} preview />
+    </div>
+  </aside>
+</div>
+
+<script>
+  const $ = <T extends Element>(s: string) => document.querySelector<T>(s)!;
+  const nameIn = $<HTMLInputElement>('#name');
+  const descIn = $<HTMLTextAreaElement>('#description');
+  const fileIn = $<HTMLInputElement>('#image');
+  const pName = $('[data-preview] [data-name]');
+  const pDesc = $('[data-preview] [data-desc]');
+  const pImg = $<HTMLImageElement>('[data-preview] [data-img]');
+  const pHolder = $('[data-preview] [data-placeholder]');
+
+  nameIn.addEventListener('input', () => {
+    pName.textContent = nameIn.value || 'Nama katalog';
+  });
+  descIn.addEventListener('input', () => {
+    pDesc.textContent = descIn.value;
+    $('#desc-count').textContent = `${descIn.value.length} / 500`;
+  });
+  fileIn.addEventListener('change', () => {
+    const f = fileIn.files?.[0];
+    if (!f) return;
+    pImg.src = URL.createObjectURL(f);
+    pImg.classList.remove('hidden');
+    pHolder.classList.add('hidden');
+    $('#file-hint').textContent = f.name;
+  });
+</script>

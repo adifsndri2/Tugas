@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "plus jakarta sans", system-ui, sans-serif;
+    --color-brand: #2b4fd8;
+    --color-brand-dark: #2342b8;
+    --color-brand-soft: #e3eaff;
+    --color-ink: #0f1b2d;
+    --color-muted: #44546a;
+    --color-line: #e3e9f2;
+    --color-edge: #cbd5e4;
+    --color-surface: #f4f7fb;
+    --color-danger: #b42318;
+}
+
+@layer components {
+    .btn {
+        @apply inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border border-edge bg-white px-[18px] text-sm font-semibold text-ink no-underline;
+    }
+
+    .btn-primary {
+        @apply border-brand bg-brand text-white hover:bg-brand-dark;
+    }
+
+    .btn-danger {
+        @apply bg-danger text-white hover:bg-red-700 focus:ring-red-500;
+    }
+
+    .field {
+        @apply h-12 w-full rounded-xl border border-edge bg-white px-3.5 text-[15px] text-ink aria-invalid:border-danger;
+    }
+    label {
+        @apply mb-2 block text-sm font-semibold;
+    }
+}

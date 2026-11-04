@@ -1,0 +1,44 @@
+---
+import AdminLayout from '../../../layout/adminLayout.astro';
+import CatalogForm from '../../../components/CatalogForm.astro';
+import { getCatalog, updateCatalog, readForm, validate, type Errors } from '../../../lib/catalog';
+import { checkImage, saveImage, deleteImage} from '../../../lib/upload';
+
+const id = Number(Astro.params.id);
+const current = getCatalog(id);
+if (!current) return Astro.redirect('/admin');
+
+let errors: Errors = {};
+let values = {
+  name: current.name,
+  description: current.description ?? '',
+  link: current.link,
+  image_path: current.image_path,
+};
+
+if (Astro.request.method === 'POST') {
+  const v = readForm(await Astro.request.formData());
+  values = { ...values, name: v.name, description: v.description, link: v.link };
+
+  errors = validate(v);
+  if (v.image) {
+    const msg = checkImage(v.image);
+    if (msg) errors.image = msg;
+  }
+
+  if (Object.keys(errors).length === 0) {
+    let image_path = current.image_path;
+    if (v.image) {
+      image_path = await saveImage(v.image);
+      await deleteImage(current.image_path);
+    }
+    updateCatalog(id, { name: v.name, description: v.description, link: v.link, image_path });
+    return Astro.redirect('/admin');
+  }
+}
+---
+<AdminLayout title="Edit Katalog">
+  <p class="mb-2 text-sm text-muted"><a href="/admin" class="text-brand">Katalog</a> / Edit Katalog</p>
+  <h1 class="mb-6 text-[28px] font-bold">Edit Katalog</h1>
+  <CatalogForm values={values} errors={errors} isEdit />
+</AdminLayout>
