@@ -10,64 +10,140 @@ import logo from '../image/dst-transparant2-AVLakLNb0ZHlXE4v.avif';
 const q = (Astro.url.searchParams.get('q') ?? '').trim();
 const items = searchCatalogs(q);
 const isAdmin = Boolean(ADMIN_TOKEN && Astro.cookies.get('session')?.value === ADMIN_TOKEN);
-const accents = ['blue', 'teal', 'amber', 'green', 'red', 'violet'];
+const accents = ['blue', 'teal', 'green'];
 ---
 
 <Base title="Portal DST Apps" description={projectDescription}>
-    <div class="min-h-screen overflow-hidden bg-[linear-gradient(135deg,#E8FAFC_0%,#F2F4FF_55%,#F5F1FF_100%)] pb-12">
-        <section class="relative bg-[radial-gradient(circle_at_86%_52%,rgba(73,132,255,0.8),transparent_18%),linear-gradient(115deg,#102A72_0%,#123B9B_48%,#315CD0_100%)] px-6 pt-[68px] text-white sm:px-8">
-            <div class="pointer-events-none absolute inset-0 opacity-30 [background-image:radial-gradient(rgba(255,255,255,0.34)_1px,transparent_1px)] [background-size:24px_24px]"></div>
-            <div class="pointer-events-none absolute -left-20 top-28 size-64 rounded-full border border-white/20"></div>
-            <div class="pointer-events-none absolute -right-20 top-36 size-64 rounded-full bg-[#4A8BEB]/30"></div>
-            <span class="pointer-events-none absolute left-[13%] top-44 size-2 rounded-full bg-[#FFC52F]"></span>
-            <span class="pointer-events-none absolute right-[15%] top-20 size-2 rounded-full bg-[#FF6B78]"></span>
-            <span class="pointer-events-none absolute left-[24%] bottom-20 size-1.5 rounded-full bg-[#55E7C5]"></span>
+    <div class="min-h-screen bg-[#F5F7FA] text-[#24334A]">
+        <header id="home" class="sticky top-0 z-50 border-b border-[#E8ECF2] bg-white/95 shadow-[0_3px_14px_rgba(20,43,78,0.08)] backdrop-blur">
+            <nav class="mx-auto flex min-h-[78px] max-w-[1180px] flex-wrap items-center justify-between gap-x-6 px-5 py-3 sm:px-8">
+                <a href="/" aria-label="Portal DST Apps" class="flex items-center">
+                    <img src={logo.src} alt="Digital Solusi Terpadu" class="h-12 w-auto max-w-[210px] object-contain" />
+                </a>
+                <a href={isAdmin ? '/admin' : '/admin/login'} class="order-2 rounded-md bg-[#203D79] px-4 py-2.5 text-xs font-semibold text-white no-underline transition hover:bg-[#172F62] sm:text-sm md:order-3">
+                    {isAdmin ? 'Kelola Katalog' : 'Masuk Admin'}
+                </a>
+                <div class="order-3 flex basis-full items-center justify-center gap-5 pt-1 text-[13px] font-medium text-[#44546A] sm:gap-8 md:order-2 md:basis-auto md:pt-0">
+                    <a href="#home" class="text-[#203D79] underline decoration-2 underline-offset-8">Catalog</a>
+                </div>
+            </nav>
+        </header>
 
-            <div class="mx-auto max-w-[1120px]">
-                <nav class="fixed inset-x-0 top-0 z-50 flex h-[68px] items-center justify-between border-b border-white/10 bg-[#102A72]/95 px-6 shadow-[0_3px_14px_rgba(15,27,45,0.16)] backdrop-blur sm:px-8">
-                    <a href="/" aria-label="Kembali ke halaman utama" class="mx-auto flex w-full max-w-[1120px] items-center gap-2 text-sm font-bold text-white no-underline">
-                        <span class="grid h-8 min-w-8 place-items-center rounded-lg bg-white px-1.5">
-                            <img src={logo.src} alt="Logo DST" class="h-6 w-auto max-w-[105px] object-contain" />
-                        </span>
-                        <span>Portal DST Apps</span>
-                    </a>
-                    <a href={isAdmin ? '/admin' : '/admin/login'} class="absolute right-6 rounded-full bg-white px-4 py-2 text-xs font-semibold text-[#123B9B] no-underline transition hover:bg-[#DCE7FF] sm:right-8">
-                        {isAdmin ? 'Kelola Katalog' : 'Masuk Admin'}
-                    </a>
-                </nav>
-
-                <header class="relative mx-auto max-w-[620px] pb-20 pt-9 text-center">
-                    <div class="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-semibold text-[#BEEBFF]">
-                        <span class="size-1.5 rounded-full bg-[#55E7C5]"></span>
-                        Layanan Internal
-                    </div>
-                    <h1 class="text-[32px] leading-tight font-bold sm:text-[40px]">
-                        Selamat Datang<br><span class="text-[#DCE7FF]">di Portal DST Apps</span>
+        <main>
+            <section class="bg-white">
+                <div class="mx-auto max-w-[1180px] px-5 py-14 text-center sm:px-8 sm:py-20">
+                    <p class="mb-4 text-[11px] font-bold tracking-[0.2em] text-[#16866B]">PORTAL DIGITAL • DATA SOLUSI TERPADU</p>
+                    <h1 class="mx-auto max-w-[780px] text-[34px] leading-[1.14] font-bold tracking-[-0.035em] text-[#203D79] sm:text-[44px] lg:text-[52px]">
+                        Semua layanan internal DST, dalam satu tempat.
                     </h1>
-                    <p class="mx-auto mt-4 max-w-[500px] text-xs leading-relaxed text-[#DCE7FF] sm:text-sm">
+                    <p class="mx-auto mt-5 max-w-[650px] text-sm leading-7 text-[#59677A] sm:text-base">
                         {projectDescription}
                     </p>
-                    <form method="GET" role="search" class="relative mx-auto mt-6 max-w-[360px]">
-                        <label for="q" class="sr-only">Cari Layanan</label>
-                        <input id="q" name="q" value={q} placeholder="Cari layanan..." class="h-10 w-full rounded-full border-0 bg-white pr-20 pl-10 text-xs text-ink shadow-lg outline-none ring-brand focus:ring-2"/>
-                        <icon name="search" class="absolute top-2.5 left-3.5 size-4 text-brand"/>
-                        <span class="absolute top-3 right-4 text-[9px] text-muted">{countCatalogs(q)} layanan</span>
-                    </form>
-                </header>
-            </div>
-        </section>
 
-        <main class="relative z-10 mx-auto -mt-12 max-w-[940px] px-6 sm:px-8">
-            <section class="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
-                {items.length === 0 ? (
-                    <p class="col-span-full text-center text-muted">
-                        {q ? `Tidak ada Layanan yang ditemukan untuk "${q}"` : `Tidak ada Layanan yang tersedia`}
-                    </p>
-                ) : (
-                    items.map((it, index) => <CatalogCard item={it} accent={accents[index % accents.length]}/>)
-                )}
+                    <form method="GET" role="search" class="relative mx-auto mt-8 max-w-[590px]">
+                        <label for="q" class="sr-only">Cari Layanan</label>
+                        <icon name="search" class="absolute top-3.5 left-4 size-5 text-[#526783]" />
+                        <input
+                            id="q"
+                            name="q"
+                            value={q}
+                            placeholder="Cari layanan..."
+                            class="h-[50px] w-full rounded-md border border-[#D8E0EA] bg-white pr-24 pl-12 text-sm text-[#24334A] shadow-[0_4px_16px_rgba(32,61,121,0.07)] outline-none ring-brand focus:ring-2"
+                        />
+                        <span class="absolute top-[18px] right-4 text-[11px] text-[#738096]">{countCatalogs(q)} layanan</span>
+                    </form>
+
+                    <div class="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-[#68778B]">
+                        <span class="inline-flex items-center gap-2">
+                            <span class="size-2 rounded-full bg-[#29A078]"></span>
+                            Portal layanan internal
+                        </span>
+                        <span class="hidden h-4 w-px bg-[#DCE3EB] sm:block"></span>
+                        <span>Akses cepat untuk tim DST</span>
+                    </div>
+                </div>
             </section>
-            <p class="mt-7 text-center text-[10px] text-muted">Beberapa layanan hanya dapat diakses dari jaringan atau IP tertentu.</p>
+
+            <section id="services" class="mx-auto max-w-[1180px] px-5 py-12 sm:px-8 sm:py-16">
+                <div class="mb-7 flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                        <p class="mb-2 text-[10px] font-bold tracking-[0.18em] text-[#16866B]">LAYANAN DIGITAL</p>
+                        <h2 class="text-2xl font-bold tracking-tight text-[#203D79] sm:text-[28px]">Daftar layanan</h2>
+                    </div>
+                    <p class="text-xs text-[#68778B]">Pilih layanan untuk melanjutkan</p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+                    {items.length === 0 ? (
+                        <p class="col-span-full rounded-lg border border-[#E1E7EF] bg-white px-5 py-10 text-center text-sm text-[#68778B]">
+                            {q ? `Tidak ada layanan yang ditemukan untuk "${q}"` : 'Tidak ada layanan yang tersedia'}
+                        </p>
+                    ) : (
+                        items.map((it, index) => <CatalogCard item={it} accent={accents[index % accents.length]} />)
+                    )}
+                </div>
+                <p class="mt-6 text-center text-xs text-[#68778B]">Beberapa layanan hanya dapat diakses dari jaringan atau IP tertentu.</p>
+            </section>
+
+            <section id="solutions" class="border-y border-[#E4EAF1] bg-white">
+                <div class="mx-auto flex max-w-[1180px] flex-col gap-3 px-5 py-9 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+                    <div>
+                        <p class="text-sm font-semibold text-[#203D79]">Satu portal untuk kebutuhan digital DST</p>
+                        <p class="mt-1 text-xs leading-relaxed text-[#68778B]">Temukan aplikasi kerja, email, infrastruktur, dan layanan perusahaan dari satu halaman.</p>
+                    </div>
+                    <a href="#services" class="inline-flex w-fit items-center gap-2 text-xs font-semibold text-[#16866B] no-underline transition hover:text-[#106A55]">
+                        Jelajahi layanan
+                        <icon name="arrow" class="size-4" />
+                    </a>
+                </div>
+            </section>
         </main>
+
+        <footer id="about" class="bg-[#203D79] text-white">
+            <div class="mx-auto grid max-w-[1180px] gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.1fr_0.8fr_1.2fr] md:gap-12 md:py-14">
+                <section>
+                    <h2 class="text-xl font-bold tracking-tight">Digital Solusi Terpadu</h2>
+                    <p class="mt-3 max-w-[300px] text-sm leading-6 text-white/80">
+                        Your Partner in Digital Transformation.<br />
+                        <strong class="font-semibold text-white">Providing Value. Building Trust.</strong>
+                    </p>
+                    <div class="mt-5 flex items-center gap-3 text-sm font-semibold" aria-label="Media sosial DST">
+                        <span class="grid size-8 place-items-center rounded-full border border-white/35" aria-label="Facebook">f</span>
+                        <span class="grid size-8 place-items-center rounded-full border border-white/35" aria-label="Instagram">◎</span>
+                        <span class="grid size-8 place-items-center rounded-full border border-white/35" aria-label="TikTok">♪</span>
+                        <span class="grid size-8 place-items-center rounded-full border border-white/35" aria-label="X">X</span>
+                    </div>
+                    <p class="mt-7 text-xs text-white/65">© 2026 Digital Solusi Terpadu. All rights reserved.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-xs font-bold tracking-[0.12em] text-white/90">CONTACT</h2>
+                    <address class="mt-4 space-y-2 text-sm leading-6 text-white/85 not-italic">
+                        <p>O: (+62) 2139714970</p>
+                        <p>M: (+62) 81285947078</p>
+                        <p>E: <a href="mailto:sales@dst-group.co.id" class="text-white underline decoration-white/40 underline-offset-4">sales@dst-group.co.id</a></p>
+                    </address>
+                </section>
+
+                <section>
+                    <h2 class="text-xs font-bold tracking-[0.12em] text-white/90">ADDRESS</h2>
+                    <address class="mt-4 max-w-[390px] text-sm leading-6 text-white/85 not-italic">
+                        Menara Bidakara 2, Jl. Jendral Gatot Subroto, Kav. 71–73, 4th Floor, Menteng Dalam, Tebet District, South Jakarta, DKI Jakarta, Indonesia - 12870
+                    </address>
+                </section>
+            </div>
+        </footer>
+
+        <a
+            href="https://wa.me/6281285947078"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Hubungi DST melalui WhatsApp"
+            class="fixed right-5 bottom-5 z-40 grid size-14 place-items-center rounded-full bg-[#11956F] text-white shadow-[0_6px_18px_rgba(10,65,52,0.3)] transition hover:scale-105 hover:bg-[#0D7D5D]"
+        >
+            <svg viewBox="0 0 32 32" class="size-7 fill-current" aria-hidden="true">
+                <path d="M16 3.2A12.6 12.6 0 0 0 5.2 22.3L3.5 28.5l6.3-1.6A12.7 12.7 0 1 0 16 3.2Zm0 22.9c-2 0-3.9-.5-5.6-1.6l-.4-.2-3.7 1 1-3.6-.3-.4A10.4 10.4 0 1 1 16 26.1Zm5.7-7.8c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.2-.2.3-.8.9-1 1.1-.2.2-.4.2-.7.1-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.4.5-.6.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6-.1-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.7s1.2 3.1 1.4 3.3c.2.2 2.3 3.5 5.6 4.9.8.4 1.4.6 1.9.7.8.2 1.5.2 2 .1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3Z" />
+            </svg>
+        </a>
     </div>
 </Base>
