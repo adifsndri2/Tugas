@@ -2,7 +2,7 @@
 import Icon from '../components/icon.astro';
 import type { Catalog } from '../lib/catalog.ts';
 
-const { item, preview = false, accent = 'blue' } = Astro.props;
+const { item, preview = false, accent = 'blue', index = 0 } = Astro.props;
 const Tag = preview ? 'div' : 'a';
 const linkProps = preview ? {} : { href: item.link, target: '_blank', rel: 'noopener noreferrer' };
 const accentClasses: Record<string, string> = {
@@ -18,8 +18,9 @@ const domain = item.link?.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
 <Tag
     {...linkProps}
+    style={`--card-delay: ${Math.min(index, 6) * 70}ms`}
     class:list={[
-        'group relative flex min-h-[168px] h-full flex-col items-start rounded-2xl border border-[#E6EBF3] border-t-[3px] bg-white p-4 text-left text-ink no-underline shadow-[0_5px_16px_rgba(24,58,120,0.08)] transition hover:-translate-y-1 hover:shadow-[0_12px_26px_rgba(24,58,120,0.14)] focus-visible:ring-4 focus-visible:ring-brand/30',
+        'catalog-card group relative flex min-h-[168px] h-full flex-col items-start rounded-2xl border border-[#E6EBF3] border-t-[3px] bg-white p-4 text-left text-ink no-underline shadow-[0_5px_16px_rgba(24,58,120,0.08)] transition hover:-translate-y-1 hover:shadow-[0_12px_26px_rgba(24,58,120,0.14)] focus-visible:ring-4 focus-visible:ring-brand/30',
         accentClasses[accent]?.split(' ')[0],
     ]}
 >
@@ -35,7 +36,7 @@ const domain = item.link?.replace(/^https?:\/\//, '').replace(/\/$/, '');
         <span class:list={['size-1.5 rounded-full', accentClasses[accent]?.split(' ')[0].replace('border-t-', 'bg-')]}></span>
         <span class="truncate">{domain}</span>
     </div>
-    <span class="absolute right-4 top-4 grid size-6 place-items-center rounded-full border border-line text-brand" aria-hidden="true">
+    <span class="absolute right-4 top-4 grid size-6 place-items-center rounded-full border border-line text-brand transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true">
         <Icon name="arrow" class="size-3.5" />
     </span>
 </Tag>

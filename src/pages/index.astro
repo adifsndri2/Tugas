@@ -79,7 +79,7 @@ const accents = ['blue', 'teal', 'green'];
                             {q ? `Tidak ada layanan yang ditemukan untuk "${q}"` : 'Tidak ada layanan yang tersedia'}
                         </p>
                     ) : (
-                        items.map((it, index) => <CatalogCard item={it} accent={accents[index % accents.length]} />)
+                        items.map((it, index) => <CatalogCard item={it} accent={accents[index % accents.length]} index={index} />)
                     )}
                 </div>
                 <p class="mt-6 text-center text-xs text-[#68778B]">Beberapa layanan hanya dapat diakses dari jaringan atau IP tertentu.</p>
@@ -147,3 +147,22 @@ const accents = ['blue', 'teal', 'green'];
         </a>
     </div>
 </Base>
+
+<script>
+    const cards = document.querySelectorAll<HTMLElement>('#services .catalog-card');
+
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    entry.target.classList.toggle('is-visible', entry.isIntersecting);
+                });
+            },
+            { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
+        );
+
+        cards.forEach((card) => observer.observe(card));
+    } else {
+        cards.forEach((card) => card.classList.add('is-visible'));
+    }
+</script>
